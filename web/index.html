@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#faf9f9">
+    <meta name="description" content="Temukan dan bagikan inspirasi aesthetic di Pinterus.">
+    <title>Pinterus - Inspirasi Aesthetic Pink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#fff5f8', 100: '#fde8f0', 200: '#fbcfe0', 300: '#f7a8c8',
+                400: '#f177a8', 500: '#d47a9d', 600: '#c0527f', 700: '#a33d65',
+                800: '#873554', 900: '#713048',
+              }
+            },
+            fontFamily: { sans: ['Inter', 'sans-serif'] }
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body { font-family: 'Inter', sans-serif; background-color: #faf9f9; }
+      .masonry-grid { column-count: 2; column-gap: 16px; }
+      @media (min-width: 640px) { .masonry-grid { column-count: 3; } }
+      @media (min-width: 1024px) { .masonry-grid { column-count: 4; } }
+      @media (min-width: 1280px) { .masonry-grid { column-count: 5; } }
+      .masonry-item { break-inside: avoid; margin-bottom: 16px; }
+      .no-scrollbar { scrollbar-width: none; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #f8f1f4; }
+      ::-webkit-scrollbar-thumb { background: #e8a0bf; border-radius: 9999px; }
+      ::-webkit-scrollbar-thumb:hover { background: #d47a9d; }
+    </style>
+  </head>
+  <body class="text-slate-800 antialiased selection:bg-brand-100 selection:text-brand-700">
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useState, useEffect, useMemo } = React;
+
+      const INITIAL_PINS = [
+        { id: 'pin-1', title: 'Estetika Kamar Tidur Minimalis & Soft Pink', description: 'Suasana kamar tidur yang tenang dengan seprai linen dusty pink, lampu tidur hangat, dan dekorasi tanaman indoor.', imageUrl: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=800&q=80', category: 'Dekorasi', author: { name: 'Siti Rahma', handle: '@siti_aesthetic', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80', followers: '12.4k' }, likes: 342, isSaved: false, comments: [{ id: 'c1', name: 'Anisa', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80', text: 'Warnanya tenang banget, bedcovernya beli dimana ya?' }, { id: 'c2', name: 'Maya', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80', text: 'Inspirasi kamar impian banget ini!' }] },
+        { id: 'pin-2', title: 'Strawberry Soft Pancakes & Coffee Morning', description: 'Sarapan manis nan estetis! Fluffy pancake topped with fresh organic strawberries & whipped cream.', imageUrl: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80', category: 'Resep', author: { name: 'Chef Clarissa', handle: '@clarissa_sweets', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80', followers: '45.1k' }, likes: 890, isSaved: true, comments: [{ id: 'c3', name: 'Nadia', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=100&q=80', text: 'Resep lengkapnya dong kak!' }] },
+        { id: 'pin-3', title: 'Casual Chic Outfit: Muted Pink & Cream', description: 'Inspirasi OOTD santai tapi tetep stylish. Paduan sweater pastel dengan celana kulot broken white.', imageUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80', category: 'Fashion', author: { name: 'Nadia Putri', handle: '@nadiastyle', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80', followers: '28.9k' }, likes: 1205, isSaved: false, comments: [] },
+        { id: 'pin-4', title: 'Sudut Kopi & Study Space Cozy', description: 'Set up meja belajar serba rapi dengan cangkir latte hangat dan jurnal harian.', imageUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80', category: 'Gaya Hidup', author: { name: 'Dian Vanda', handle: '@diannotes', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80', followers: '8.3k' }, likes: 567, isSaved: false, comments: [] },
+        { id: 'pin-5', title: 'Pink Botanical Illustration & Art Piece', description: 'Lukisan cat air bertema bunga sakura bermekaran dengan palet warna pastel yang lembut.', imageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80', category: 'Seni', author: { name: 'Art by Fiona', handle: '@fiona_gallery', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80', followers: '52.1k' }, likes: 2130, isSaved: true, comments: [] },
+        { id: 'pin-6', title: 'Pink Velvet Cake Dessert Jar', description: 'Dessert box serba manis dengan keju krim tebal dan lapisan bolu red/pink velvet yang renyah.', imageUrl: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=800&q=80', category: 'Resep', author: { name: 'Chef Clarissa', handle: '@clarissa_sweets', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80', followers: '45.1k' }, likes: 940, isSaved: false, comments: [] },
+        { id: 'pin-7', title: 'Korean Style Aesthetic Stationary', description: 'Koleksi stiker, pen pastel, dan buku catatan unik untuk melengkapi perlengkapan sekolah atau kantor.', imageUrl: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80', category: 'Gaya Hidup', author: { name: 'Siti Rahma', handle: '@siti_aesthetic', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80', followers: '12.4k' }, likes: 412, isSaved: false, comments: [] },
+        { id: 'pin-8', title: 'Pink Sunset Beach Moodboard', description: 'Pemandangan laut saat matahari terbenam dengan warna langit gradasi pink dan ungu menyala.', imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80', category: 'Dekorasi', author: { name: 'Dian Vanda', handle: '@diannotes', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80', followers: '8.3k' }, likes: 1840, isSaved: false, comments: [] }
+      ];
+
+      const EXPLORE_CATEGORIES = [
+        { id: 'cat-1', title: 'Estetika Kamar', count: '120rb Pin', image: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=500&q=80' },
+        { id: 'cat-2', title: 'Outfit Soft Pink', count: '85rb Pin', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=500&q=80' },
+        { id: 'cat-3', title: 'Kafe Cozy & Dessert', count: '210rb Pin', image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=500&q=80' },
+        { id: 'cat-4', title: 'Kopi & Catatan Study', count: '45rb Pin', image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=500&q=80' },
+        { id: 'cat-5', title: 'Seni Cat Air & Bunga', count: '98rb Pin', image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=500&q=80' },
+        { id: 'cat-6', title: 'Wallpaper Langit Sunset', count: '310rb Pin', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=80' }
+      ];
+
+      const API_BASE_URL = (window.PINTERUS_API_BASE_URL || `${window.location.protocol}//${window.location.hostname}:8000/api`).replace(/\/$/, '');
+      const AUTH_TOKEN_KEY = 'pinterus_api_token';
+
+      async function apiRequest(path, { method = 'GET', body, token = localStorage.getItem(AUTH_TOKEN_KEY) } = {}) {
+        const headers = { Accept: 'application/json' };
+        const requestOptions = { method, headers };
+
+        if (token) headers.Authorization = `Bearer ${token}`;
+        if (body instanceof FormData) {
+          requestOptions.body = body;
+        } else if (body !== undefined) {
+          headers['Content-Type'] = 'application/json';
+          requestOptions.body = JSON.stringify(body);
+        }
+
+        const response = await fetch(`${API_BASE_URL}${path}`, requestOptions);
+        const result = await response.json();
+
+        if (!response.ok) {
+          const firstValidationError = result.errors && Object.values(result.errors)[0]?.[0];
+          const error = new Error(firstValidationError || result.message || 'Permintaan gagal. Coba lagi.');
+          error.status = response.status;
+          throw error;
+        }
+
+        return result;
+      }
+
+      function resolveAssetUrl(value) {
+        if (!value) return 'assets/images/pinterus_logo.jpg';
+        const apiOrigin = API_BASE_URL.replace(/\/api$/, '');
+        const assetUrl = new URL(value, `${apiOrigin}/`);
+        if (['localhost', '127.0.0.1', '::1'].includes(assetUrl.hostname)) {
+          assetUrl.hostname = window.location.hostname;
+        }
+        return assetUrl.toString();
+      }
+
+      function mapPin(pin) {
+        const author = pin.user || {};
+        return {
+          ...pin,
+          id: pin.id,
+          imageUrl: resolveAssetUrl(pin.image_url),
+          linkUrl: pin.link_url,
+          category: pin.category || 'Gaya Hidup',
+          author: {
+            id: author.id || pin.user_id,
+            name: author.name || 'Pengguna Pinterus',
+            handle: `@${author.username || 'pengguna'}`,
+            avatar: resolveAssetUrl(author.avatar_url),
+          },
+          likes: 0,
+          comments: [],
+          isSaved: Boolean(pin.is_saved),
+        };
+      }
+
+      function App() {
+        const [activeTab, setActiveTab] = useState('home');
+        const [pins, setPins] = useState([]);
+        const [savedPins, setSavedPins] = useState([]);
+        const [currentUser, setCurrentUser] = useState(null);
+        const [authToken, setAuthToken] = useState(localStorage.getItem(AUTH_TOKEN_KEY));
+        const [authError, setAuthError] = useState('');
+        const [isLoading, setIsLoading] = useState(true);
+        const [isSubmitting, setIsSubmitting] = useState(false);
+        const [profileTargetId, setProfileTargetId] = useState(null);
+        const [profileData, setProfileData] = useState(null);
+        const [isFollowingProfile, setIsFollowingProfile] = useState(false);
+        const [showCreateDialog, setShowCreateDialog] = useState(false);
+        const [showEditProfileDialog, setShowEditProfileDialog] = useState(false);
+        const [selectedCategory, setSelectedCategory] = useState('Untuk Anda');
+        const [searchQuery, setSearchQuery] = useState('');
+        const [selectedPin, setSelectedPin] = useState(null);
+        const [toastMessage, setToastMessage] = useState(null);
+
+        const showToast = (message) => {
+          setToastMessage(message);
+          window.setTimeout(() => setToastMessage(null), 3000);
+        };
+
+        useEffect(() => {
+          if (window.lucide) window.lucide.createIcons();
+        }, [activeTab, selectedPin, pins, searchQuery, showCreateDialog, showEditProfileDialog, profileData]);
+
+        useEffect(() => {
+          let isCurrent = true;
+          const loadAccount = async () => {
+            if (!authToken) {
+              setCurrentUser(null);
+              setPins([]);
+              setSavedPins([]);
+              setIsLoading(false);
+              return;
+            }
+
+            setIsLoading(true);
+            try {
+              const [account, feed, saved] = await Promise.all([
+                apiRequest('/me', { token: authToken }),
+                apiRequest('/pins', { token: authToken }),
+                apiRequest('/me/saved-pins', { token: authToken }),
+              ]);
+              if (!isCurrent) return;
+              setCurrentUser(account.data);
+              setPins(feed.data.map(mapPin));
+              setSavedPins(saved.data.map(mapPin));
+            } catch (error) {
+              if (!isCurrent) return;
+              if (error.status === 401) {
+                localStorage.removeItem(AUTH_TOKEN_KEY);
+                setAuthToken(null);
+              } else {
+                showToast(error.message);
+              }
+            } finally {
+              if (isCurrent) setIsLoading(false);
+            }
+          };
+
+          loadAccount();
+          return () => { isCurrent = false; };
+        }, [authToken]);
+
+        useEffect(() => {
+          if (activeTab !== 'profile' || !authToken || !currentUser) return;
+          let isCurrent = true;
+          const userId = profileTargetId || currentUser.id;
+          apiRequest(`/users/${userId}`, { token: authToken }).then((response) => {
+            if (!isCurrent) return;
+            setProfileData({
+              ...response.data.user,
+              pins: response.data.pins.map(mapPin),
+              isCurrentUser: response.data.is_current_user,
+            });
+            setIsFollowingProfile(response.data.is_following);
+          }).catch((error) => {
+            if (isCurrent) showToast(error.message);
+          });
+          return () => { isCurrent = false; };
+        }, [activeTab, profileTargetId, currentUser, authToken]);
+
+        const refreshPins = async () => {
+          const [feed, saved] = await Promise.all([
+            apiRequest('/pins', { token: authToken }),
+            apiRequest('/me/saved-pins', { token: authToken }),
+          ]);
+          setPins(feed.data.map(mapPin));
+          setSavedPins(saved.data.map(mapPin));
+        };
+
+        const toggleSavePin = async (pinId, event) => {
+          if (event) event.stopPropagation();
+          const pin = pins.find((item) => item.id === pinId);
+          if (!pin) return;
+          try {
+            await apiRequest(`/pins/${pinId}/save`, {
+              method: pin.isSaved ? 'DELETE' : 'POST',
+              token: authToken,
+            });
+            await refreshPins();
+            showToast(pin.isSaved ? 'Pin dihapus dari simpanan.' : 'Pin berhasil disimpan.');
+          } catch (error) {
+            showToast(error.message);
+          }
+        };
+
+        const toggleFollow = async (userId) => {
+          if (!userId || userId === currentUser?.id) return;
+          try {
+            const method = isFollowingProfile ? 'DELETE' : 'POST';
+            const response = await apiRequest(`/users/${userId}/follow`, { method, token: authToken });
+            setIsFollowingProfile(response.is_following);
+            showToast(response.is_following ? 'Berhasil mengikuti profil.' : 'Berhenti mengikuti profil.');
+          } catch (error) {
+            showToast(error.message);
+          }
+        };
+
+        const handleAuth = async (mode, fields) => {
+          setIsSubmitting(true);
+          setAuthError('');
+          try {
+            const response = await apiRequest(`/auth/${mode}`, { method: 'POST', body: fields, token: null });
+            localStorage.setItem(AUTH_TOKEN_KEY, response.data.token);
+            setAuthToken(response.data.token);
+          } catch (error) {
+            setAuthError(error.message);
+          } finally {
+            setIsSubmitting(false);
+          }
+        };
+
+        const handleCreatePin = async (fields) => {
+          const body = new FormData();
+          body.append('title', fields.title);
+          body.append('description', fields.description);
+          body.append('category', fields.category);
+          if (fields.linkUrl) body.append('link_url', fields.linkUrl);
+          body.append('image', fields.image);
+          try {
+            await apiRequest('/pins', { method: 'POST', body, token: authToken });
+            await refreshPins();
+            setShowCreateDialog(false);
+            setActiveTab('home');
+            showToast('Pin berhasil dipublikasikan.');
+          } catch (error) {
+            showToast(error.message);
+          }
+        };
+
+        const handleDeletePin = async (pinId) => {
+          try {
+            await apiRequest(`/pins/${pinId}`, { method: 'DELETE', token: authToken });
+            setPins((items) => items.filter((item) => item.id !== pinId));
+            setSelectedPin(null);
+            showToast('Pin berhasil dihapus.');
+          } catch (error) {
+            showToast(error.message);
+          }
+        };
+
+        const handleReportPin = async (pinId, reason) => {
+          try {
+            const response = await apiRequest(`/pins/${pinId}/report`, {
+              method: 'POST',
+              body: { reason },
+              token: authToken,
+            });
+            showToast(response.message);
+          } catch (error) {
+            showToast(error.message);
+          }
+        };
+
+        const handleUpdateProfile = async (fields) => {
+          const body = new FormData();
+          body.append('_method', 'PATCH');
+          body.append('name', fields.name);
+          body.append('username', fields.username);
+          body.append('bio', fields.bio);
+          if (fields.avatar) body.append('avatar', fields.avatar);
+          try {
+            const response = await apiRequest('/me', { method: 'POST', body, token: authToken });
+            setCurrentUser(response.data);
+            setShowEditProfileDialog(false);
+            setProfileTargetId(response.data.id);
+            showToast('Profil berhasil diperbarui.');
+          } catch (error) {
+            showToast(error.message);
+          }
+        };
+
+        const handleShare = async (title, url) => {
+          try {
+            if (navigator.share) {
+              await navigator.share({ title, url });
+            } else {
+              await navigator.clipboard.writeText(url);
+              showToast('Tautan berhasil disalin.');
+            }
+          } catch (error) {
+            if (error.name !== 'AbortError') showToast('Gagal membagikan tautan.');
+          }
+        };
+
+        const handleLogout = async () => {
+          try {
+            await apiRequest('/auth/logout', { method: 'POST', token: authToken });
+          } catch (error) {
+            showToast(error.message);
+          } finally {
+            localStorage.removeItem(AUTH_TOKEN_KEY);
+            setAuthToken(null);
+            setProfileData(null);
+            setActiveTab('home');
+            showToast('Kamu sudah keluar.');
+          }
+        };
+
+        const openProfile = (userId = currentUser?.id) => {
+          if (!userId) return;
+          setProfileTargetId(userId);
+          setProfileData(null);
+          setSelectedPin(null);
+          setActiveTab('profile');
+        };
+
+        const filteredPins = useMemo(() => pins.filter((pin) => {
+          const matchesCategory = selectedCategory === 'Untuk Anda' || pin.category === selectedCategory;
+          const searchableText = `${pin.title} ${pin.description} ${pin.category}`.toLowerCase();
+          return matchesCategory && searchableText.includes(searchQuery.toLowerCase());
+        }), [pins, selectedCategory, searchQuery]);
+
+        return (
+          <div className="min-h-screen flex flex-col bg-[#faf9f9]">
+            {toastMessage && (
+              <div role="status" className="fixed bottom-20 md:bottom-8 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium flex items-center gap-2 backdrop-blur-sm border border-slate-700/50">
+                <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>{toastMessage}
+              </div>
+            )}
+
+            <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-pink-100/80 px-4 py-3">
+              <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-6">
+                <button onClick={() => { setActiveTab('home'); setSearchQuery(''); }} className="flex items-center gap-2 group" aria-label="Pinterus beranda">
+                  <span className="w-10 h-10 rounded-full bg-[#E8A0BF]/20 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-sm" aria-hidden="true">
+                      <circle cx="50" cy="50" r="48" fill="#E8A0BF" />
+                      <path d="M50 25C36.2 25 25 36.2 25 50c0 10.5 6.5 19.5 15.7 23.3-.6-3.9 0-10.5 1-15L45.8 40.8s-1-2-1-5c0-4.7 2.7-8.2 6.1-8.2 2.9 0 4.3 2.2 4.3 4.8 0 2.9-1.9 7.3-2.9 11.5-.8 3.4 1.7 6.2 5 6.2 6 0 10.6-6.3 10.6-15.4C67.9 26.6 62.1 21 51.5 21 39.2 21 32 30.2 32 40.9c0 3.7 1.4 7.7 3.1 9.8.3.4.4.8.3 1.3l-1.2 4.8c-.2.8-.8 1.1-1.6.7-5.1-2.4-8.3-9.9-8.3-16.7C24.3 25.8 35.2 12 52.6 12c14 0 24.8 10 24.8 23.1 0 13.9-8.7 25.1-20.8 25.1-4.1 0-7.9-2.1-9.2-4.6l-2.6 9.9c-1 3.8-3 8.6-4.4 11.8 3 .9 6.2 1.4 9.6 1.4 15.8 0 28.7-12.9 28.7-28.7S65.8 25 50 25Z" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <span className="font-bold text-xl text-slate-800 hidden sm:inline-block">pinterus</span>
+                </button>
+
+                <nav className="hidden md:flex items-center gap-1 font-medium text-sm" aria-label="Navigasi utama">
+                  <NavButton active={activeTab === 'home'} onClick={() => setActiveTab('home')}>Beranda</NavButton>
+                  <NavButton active={activeTab === 'explore'} onClick={() => setActiveTab('explore')}>Menjelajah</NavButton>
+                  <NavButton active={activeTab === 'create'} onClick={() => setActiveTab('create')}>Buat</NavButton>
+                </nav>
+
+                <div className="flex-1 max-w-2xl relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><i data-lucide="search" className="w-4 h-4"></i></span>
+                  <input type="search" placeholder="Cari ide kamar, outfit pink, resep manis..." value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} className="w-full pl-10 pr-10 py-2.5 bg-slate-100/80 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-400 rounded-full text-sm text-slate-800 placeholder-slate-400 border border-transparent focus:border-brand-200" aria-label="Cari pin" />
+                  {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600" aria-label="Hapus pencarian"><i data-lucide="x" className="w-4 h-4"></i></button>}
+                </div>
+
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <button onClick={() => showToast('Tidak ada notifikasi baru.')} className="p-2.5 text-slate-600 hover:bg-slate-100 rounded-full relative hidden sm:flex" title="Notifikasi" aria-label="Notifikasi"><i data-lucide="bell" className="w-5 h-5"></i><span className="absolute top-2 right-2 w-2 h-2 bg-brand-500 rounded-full"></span></button>
+                  <button onClick={() => showToast('Pesan masuk kosong.')} className="p-2.5 text-slate-600 hover:bg-slate-100 rounded-full hidden sm:flex" title="Pesan" aria-label="Pesan"><i data-lucide="message-circle" className="w-5 h-5"></i></button>
+                  <button onClick={() => setActiveTab('profile')} className={`p-1 rounded-full hover:bg-slate-100 ${activeTab === 'profile' ? 'ring-2 ring-brand-500 ring-offset-2' : ''}`} aria-label="Profil">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Profil pengguna" className="w-8 h-8 rounded-full object-cover border border-brand-200" />
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            <main className="flex-1 pb-20 md:pb-10">
+              {activeTab === 'home' && <HomeView pins={filteredPins} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} onSelectPin={setSelectedPin} onToggleSave={toggleSavePin} />}
+              {activeTab === 'explore' && <ExploreView categories={EXPLORE_CATEGORIES} onSelectCategory={(title) => { setSelectedCategory('Untuk Anda'); setSearchQuery(title); setActiveTab('home'); }} />}
+              {activeTab === 'create' && <CreatePinView onSubmit={handleCreatePin} />}
+              {activeTab === 'profile' && <ProfileView pins={pins} onSelectPin={setSelectedPin} onToggleSave={toggleSavePin} />}
+            </main>
+
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-pink-100 py-2 px-6 flex justify-around items-center z-40" aria-label="Navigasi mobile">
+              <MobileNavButton active={activeTab === 'home'} icon="home" label="Beranda" onClick={() => setActiveTab('home')} />
+              <MobileNavButton active={activeTab === 'explore'} icon="compass" label="Jelajah" onClick={() => setActiveTab('explore')} />
+              <MobileNavButton active={activeTab === 'create'} icon="plus-circle" label="Buat" onClick={() => setActiveTab('create')} />
+              <MobileNavButton active={activeTab === 'profile'} icon="user" label="Profil" onClick={() => setActiveTab('profile')} />
+            </nav>
+
+            {selectedPin && <PinDetailModal pin={selectedPin} onClose={() => setSelectedPin(null)} onToggleSave={toggleSavePin} allPins={pins} onSelectRelatedPin={setSelectedPin} isFollowing={!!followedCreators[selectedPin.author.handle]} onToggleFollow={() => toggleFollow(selectedPin.author.handle)} onAddComment={(text) => handleAddComment(selectedPin.id, text)} />}
+          </div>
+        );
+      }
+
+      function NavButton({ active, onClick, children }) {
+        return <button onClick={onClick} className={`px-4 py-2 rounded-full transition-colors ${active ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-100'}`}>{children}</button>;
+      }
+
+      function MobileNavButton({ active, icon, label, onClick }) {
+        return <button onClick={onClick} className={`flex flex-col items-center gap-0.5 ${active ? 'text-brand-600 font-semibold' : 'text-slate-500'}`}><i data-lucide={icon} className="w-5 h-5"></i><span className="text-[10px]">{label}</span></button>;
+      }
+
+      function HomeView({ pins, selectedCategory, setSelectedCategory, onSelectPin, onToggleSave }) {
+        const categories = ['Untuk Anda', 'Gaya Hidup', 'Dekorasi', 'Resep', 'Fashion', 'Seni'];
+        return (
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-4 pt-1 no-scrollbar mb-4 scroll-smooth">
+              {categories.map((category) => <button key={category} onClick={() => setSelectedCategory(category)} className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedCategory === category ? 'bg-brand-500 text-white shadow-sm shadow-brand-200' : 'bg-white text-slate-600 hover:bg-pink-50/60 border border-slate-200/60'}`}>{category}</button>)}
+            </div>
+            {pins.length === 0 ? (
+              <div className="text-center py-20"><div className="w-16 h-16 mx-auto mb-4 bg-brand-50 rounded-full flex items-center justify-center text-brand-400"><i data-lucide="search-x" className="w-8 h-8"></i></div><h3 className="text-lg font-semibold text-slate-700">Pin tidak ditemukan</h3><p className="text-sm text-slate-500 max-w-sm mx-auto mt-1">Coba gunakan kata kunci pencarian lain atau pilih kategori yang berbeda.</p></div>
+            ) : <div className="masonry-grid">{pins.map((pin) => <div key={pin.id} className="masonry-item"><PinCard pin={pin} onClick={() => onSelectPin(pin)} onToggleSave={(event) => onToggleSave(pin.id, event)} /></div>)}</div>}
+          </div>
+        );
+      }
+
+      function PinCard({ pin, onClick, onToggleSave }) {
+        return (
+          <article onClick={onClick} onKeyDown={(event) => { if (event.key === 'Enter') onClick(); }} role="button" tabIndex="0" className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-slate-100">
+            <div className="relative overflow-hidden bg-slate-100">
+              <img src={pin.imageUrl} alt={pin.title} className="w-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out min-h-[180px]" loading="lazy" />
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3">
+                <div className="flex justify-end"><button onClick={(event) => { event.stopPropagation(); onToggleSave(event); }} className={`px-4 py-2 rounded-full font-semibold text-xs sm:text-sm shadow-md active:scale-95 ${pin.isSaved ? 'bg-slate-900 text-white' : 'bg-brand-500 hover:bg-brand-600 text-white'}`}>{pin.isSaved ? 'Tersimpan' : 'Simpan'}</button></div>
+                <div className="flex justify-between items-center text-white"><span className="text-xs bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full font-medium">{pin.category}</span><div className="flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-1 rounded-full text-xs"><i data-lucide="heart" className="w-3.5 h-3.5 fill-white"></i><span>{pin.likes}</span></div></div>
+              </div>
+            </div>
+            <div className="p-3"><h2 className="text-sm font-semibold text-slate-800 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">{pin.title}</h2><div className="flex items-center gap-2 mt-2.5"><img src={pin.author.avatar} alt="" className="w-5 h-5 rounded-full object-cover" /><span className="text-xs text-slate-500 font-medium truncate">{pin.author.name}</span></div></div>
+          </article>
+        );
+      }
+
+      function PinDetailModal({ pin, onClose, onToggleSave, allPins, onSelectRelatedPin, isFollowing, onToggleFollow, onAddComment }) {
+        const [commentInput, setCommentInput] = useState('');
+        const relatedPins = useMemo(() => allPins.filter((item) => item.id !== pin.id && item.category === pin.category).slice(0, 4), [allPins, pin]);
+        const handleSubmitComment = (event) => { event.preventDefault(); if (commentInput.trim()) { onAddComment(commentInput); setCommentInput(''); } };
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto" role="dialog" aria-modal="true" aria-label={pin.title}>
+            <button className="fixed inset-0 cursor-default" onClick={onClose} aria-label="Tutup detail pin"></button>
+            <div className="relative bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl z-10 my-auto border border-pink-100 max-h-[90vh] flex flex-col md:flex-row">
+              <button onClick={onClose} className="absolute top-3 right-3 z-20 md:hidden p-2 bg-white/80 rounded-full text-slate-700 shadow" aria-label="Tutup"><i data-lucide="x" className="w-5 h-5"></i></button>
+              <div className="md:w-1/2 bg-slate-100 flex items-center justify-center p-4 min-h-[260px]"><img src={pin.imageUrl} alt={pin.title} className="max-h-[70vh] w-auto max-w-full object-contain rounded-xl shadow-sm" /></div>
+              <div className="md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4"><div className="flex items-center gap-2"><button onClick={() => { navigator.clipboard?.writeText(window.location.href); }} className="p-2.5 text-slate-600 hover:bg-slate-100 rounded-full" title="Bagikan" aria-label="Bagikan"><i data-lucide="share-2" className="w-5 h-5"></i></button><button onClick={() => window.open(pin.imageUrl, '_blank', 'noopener')} className="p-2.5 text-slate-600 hover:bg-slate-100 rounded-full" title="Buka gambar" aria-label="Buka gambar"><i data-lucide="more-horizontal" className="w-5 h-5"></i></button></div><div className="flex items-center gap-3"><a href={pin.imageUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-semibold rounded-full">Kunjungi</a><button onClick={(event) => onToggleSave(pin.id, event)} className={`px-5 py-2.5 rounded-full font-semibold text-xs sm:text-sm shadow-md ${pin.isSaved ? 'bg-slate-900 text-white' : 'bg-brand-500 hover:bg-brand-600 text-white'}`}>{pin.isSaved ? 'Tersimpan' : 'Simpan'}</button></div></div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-800 leading-tight mb-2">{pin.title}</h2><p className="text-sm text-slate-600 leading-relaxed mb-6">{pin.description}</p>
+                  <div className="flex items-center justify-between py-3 border-y border-slate-100 mb-6"><div className="flex items-center gap-3"><img src={pin.author.avatar} alt="" className="w-10 h-10 rounded-full object-cover border border-brand-200" /><div><h3 className="text-sm font-semibold text-slate-800">{pin.author.name}</h3><p className="text-xs text-slate-500">{pin.author.followers} pengikut</p></div></div><button onClick={onToggleFollow} className={`px-4 py-2 rounded-full text-xs font-semibold ${isFollowing ? 'bg-slate-200 text-slate-800' : 'bg-brand-100 hover:bg-brand-200 text-brand-700'}`}>{isFollowing ? 'Mengikuti' : 'Ikuti'}</button></div>
+                  <section className="mb-6"><h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><span>Komentar</span><span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{pin.comments.length}</span></h3><div className="space-y-3 max-h-40 overflow-y-auto pr-2">{pin.comments.length === 0 ? <p className="text-xs text-slate-400 italic">Belum ada komentar. Jadilah yang pertama!</p> : pin.comments.map((comment) => <div key={comment.id} className="flex gap-2.5 text-xs"><img src={comment.avatar} alt="" className="w-6 h-6 rounded-full object-cover mt-0.5" /><p><span className="font-semibold text-slate-800">{comment.name} </span><span className="text-slate-600">{comment.text}</span></p></div>)}</div></section>
+                  {relatedPins.length > 0 && <section className="mb-5"><h3 className="text-sm font-bold text-slate-800 mb-3">Inspirasi serupa</h3><div className="grid grid-cols-2 gap-2">{relatedPins.map((item) => <button key={item.id} onClick={() => onSelectRelatedPin(item)} className="text-left"><img src={item.imageUrl} alt="" className="w-full h-20 object-cover rounded-lg" /><span className="block mt-1 text-xs font-medium text-slate-700 line-clamp-1">{item.title}</span></button>)}</div></section>}
+                </div>
+                <form onSubmit={handleSubmitComment} className="pt-3 border-t border-slate-100 flex gap-2"><input type="text" placeholder="Tambahkan komentar..." value={commentInput} onChange={(event) => setCommentInput(event.target.value)} className="flex-1 min-w-0 bg-slate-100 px-4 py-2 rounded-full text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-400" /><button type="submit" disabled={!commentInput.trim()} className="p-2 bg-brand-500 hover:bg-brand-600 disabled:opacity-40 text-white rounded-full" aria-label="Kirim komentar"><i data-lucide="send" className="w-4 h-4"></i></button></form>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      function ExploreView({ categories, onSelectCategory }) {
+        const popularSearches = ['#SoftPinkAesthetic', '#KoreanRoomSetup', '#StrawberryDesserts', '#CozyStudyCorner', '#MinimalistOOTD', '#FloralWatercolor', '#PastelVibes'];
+        return (
+          <div className="max-w-6xl mx-auto px-4 py-6">
+            <div className="text-center max-w-xl mx-auto mb-8"><span className="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-100 px-3 py-1 rounded-full">Trend Hari Ini</span><h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mt-3">Jelajahi Inspirasi Estetik Baru</h1><p className="text-slate-500 text-sm mt-2">Temukan ide dekorasi, style fashion, resep masakan manis, dan ide kreatif pilihan pinterus.</p></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">{categories.map((category) => <button key={category.id} onClick={() => onSelectCategory(category.title)} className="group relative h-64 rounded-2xl overflow-hidden text-left shadow-md hover:shadow-xl transition-all"><img src={category.image} alt={category.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" /><span className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent flex flex-col justify-end p-6 text-white"><span className="text-xs text-brand-200 font-medium">{category.count}</span><span className="text-xl font-bold mt-1">{category.title}</span></span></button>)}</div>
+            <section className="mt-12 bg-white p-6 rounded-2xl border border-pink-100 text-center"><h2 className="text-sm font-bold text-slate-700 mb-4">Pencarian Populer di Pinterus</h2><div className="flex flex-wrap justify-center gap-2">{popularSearches.map((tag) => <button key={tag} onClick={() => onSelectCategory(tag.slice(1))} className="px-4 py-2 bg-pink-50 hover:bg-brand-100 text-brand-700 text-xs font-medium rounded-full">{tag}</button>)}</div></section>
+          </div>
+        );
+      }
+
+      function CreatePinView({ onSubmit }) {
+        const [title, setTitle] = useState('');
+        const [description, setDescription] = useState('');
+        const [category, setCategory] = useState('Dekorasi');
+        const [imageUrl, setImageUrl] = useState('');
+
+        const handleSubmit = (event) => {
+          event.preventDefault();
+          if (!title.trim() || !imageUrl.trim()) return;
+
+          onSubmit({
+            id: `pin-${Date.now()}`,
+            title: title.trim(),
+            description: description.trim(),
+            imageUrl: imageUrl.trim(),
+            category,
+            author: {
+              name: 'Pengguna Pinterus',
+              handle: '@pengguna_pinterus',
+              avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+              followers: '1'
+            },
+            likes: 1,
+            isSaved: true,
+            comments: []
+          });
+        };
+
+        return (
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="bg-white rounded-2xl p-6 sm:p-10 shadow-lg border border-pink-100">
+              <div className="border-b border-slate-100 pb-4 mb-6 flex justify-between items-center gap-4">
+                <div>
+                  <h1 className="text-xl font-bold text-slate-800">Buat Pin Baru</h1>
+                  <p className="text-xs text-slate-500 mt-1">Bagikan inspirasi visualmu ke Pinterus</p>
+                </div>
+                <button form="create-pin-form" type="submit" disabled={!title.trim() || !imageUrl.trim()} className="px-6 py-2.5 bg-brand-500 hover:bg-brand-600 disabled:opacity-50 text-white rounded-full font-semibold text-sm">Publikasikan</button>
+              </div>
+
+              <form id="create-pin-form" onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="border-2 border-dashed border-pink-200 rounded-2xl p-6 bg-pink-50/30 min-h-[300px] flex flex-col items-center justify-center gap-4">
+                  {imageUrl ? (
+                    <img src={imageUrl} alt="Pratinjau gambar pin" className="max-h-72 max-w-full object-contain rounded-xl shadow" />
+                  ) : (
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="image-plus" className="w-6 h-6"></i></div>
+                      <p className="text-sm font-semibold text-slate-700">Masukkan URL Gambar</p>
+                      <p className="text-xs text-slate-400 mt-1">Gunakan link gambar online beresolusi tinggi.</p>
+                    </div>
+                  )}
+                  <label className="w-full text-xs font-semibold text-slate-700">
+                    URL Gambar
+                    <input type="url" required placeholder="https://images.unsplash.com/..." value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} className="mt-1 w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-400 focus:outline-none" />
+                  </label>
+                  {imageUrl && <button type="button" onClick={() => setImageUrl('')} className="text-xs text-red-500 underline font-medium">Hapus Foto</button>}
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block text-xs font-bold text-slate-700">Judul Pin<input type="text" required placeholder="Tambahkan judul menarik..." value={title} onChange={(event) => setTitle(event.target.value)} className="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 focus:bg-white" /></label>
+                  <label className="block text-xs font-bold text-slate-700">Kategori<select value={category} onChange={(event) => setCategory(event.target.value)} className="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 focus:bg-white"><option>Dekorasi</option><option>Fashion</option><option>Resep</option><option>Gaya Hidup</option><option>Seni</option></select></label>
+                  <label className="block text-xs font-bold text-slate-700">Deskripsi Ringkas<textarea rows="4" placeholder="Jelaskan inspirasi ini..." value={description} onChange={(event) => setDescription(event.target.value)} className="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 focus:bg-white resize-none"></textarea></label>
+                </div>
+              </form>
+            </div>
+          </div>
+        );
+      }
+
+      function ProfileView({ pins, onSelectPin, onToggleSave }) {
+        const [profileTab, setProfileTab] = useState('saved');
+        const savedPins = useMemo(() => pins.filter((pin) => pin.isSaved), [pins]);
+        return (
+          <div className="max-w-6xl mx-auto px-4 py-6"><div className="flex flex-col items-center text-center mb-8"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80" alt="Profil pengguna" className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md ring-2 ring-brand-200 mb-3" /><h1 className="text-2xl font-bold text-slate-800">Pengguna Pinterus</h1><p className="text-xs text-slate-500 mt-0.5">@pengguna_pinterus</p><p className="text-sm text-slate-600 max-w-md mt-2">Pencinta estetika soft pink, interior kamar cozy, dan baking resep manis 🌸✨</p><div className="flex items-center gap-4 text-xs text-slate-500 font-medium mt-3"><span><b>128</b> Pengikut</span><span>•</span><span><b>45</b> Mengikuti</span></div><div className="flex gap-2 mt-4"><button onClick={() => window.alert('Fitur edit profil siap digunakan.')} className="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-full">Edit Profil</button><button onClick={() => { navigator.clipboard?.writeText(window.location.href); }} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-full">Bagikan</button></div></div>
+            <div className="flex justify-center gap-6 border-b border-slate-200/60 mb-6"><button onClick={() => setProfileTab('saved')} className={`pb-3 text-sm font-semibold ${profileTab === 'saved' ? 'text-slate-900 border-b-2 border-brand-500' : 'text-slate-400 hover:text-slate-600'}`}>Disimpan ({savedPins.length})</button><button onClick={() => setProfileTab('created')} className={`pb-3 text-sm font-semibold ${profileTab === 'created' ? 'text-slate-900 border-b-2 border-brand-500' : 'text-slate-400 hover:text-slate-600'}`}>Dibuat</button></div>
+            {profileTab === 'saved' ? (savedPins.length === 0 ? <div className="text-center py-16"><p className="text-sm text-slate-500">Belum ada Pin yang disimpan.</p></div> : <div className="masonry-grid">{savedPins.map((pin) => <div key={pin.id} className="masonry-item"><PinCard pin={pin} onClick={() => onSelectPin(pin)} onToggleSave={(event) => onToggleSave(pin.id, event)} /></div>)}</div>) : <div className="text-center py-16 bg-white rounded-2xl border border-pink-100 p-8"><i data-lucide="sparkles" className="w-10 h-10 text-brand-400 mx-auto mb-2"></i><h2 className="text-base font-bold text-slate-700">Mulai buat Pin pertamamu</h2><p className="text-xs text-slate-500 max-w-xs mx-auto mt-1 mb-4">Simpan ide dan karya buatanmu sendiri untuk dilihat oleh inspirator lain.</p></div>}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+  </html>
